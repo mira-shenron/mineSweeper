@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MineSweeper</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body onload="initGame()" oncontextmenu="return false;">
+
+    <h1>Play MineSweeper Game</h1>
+
+    <div class='levels'>
+        <button class="button beginner" name="beginner" onclick="initGame(this)">Beginner</button>
+        <button class="button meduim" name="medium" onclick="initGame(this)">Meduim</button>
+        <button class="button expert" name="expert" onclick="initGame(this)">Expert</button>
+    </div>
+
+    <div class="smiley" onclick="restartLevel()">:
+        <span></span>
+    </div>
+    <div class="mines">Mines:
+        <span></span>
+    </div>
+
+
+    <table>
+        <tbody class="board"></tbody>
+    </table>
+
+    <div class="timer">Your time:
+        <span></span>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

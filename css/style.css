@@ -1,0 +1,92 @@
+body{
+    background-image: url(/img/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+h1{
+    color:white;
+    text-align: center;
+}
+
+.levels{
+    padding-top: 10px;
+    color:white;
+    text-align: center;
+}
+
+.button{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgb(216, 140, 0);
+    font-weight: bold;
+    color:white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button:hover{
+    background-color: rgb(185, 126, 15);
+}
+
+.smiley{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.mines{
+    padding: 25px;
+    size: 35px;
+    display: block;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.mines span{
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.timer{
+    display:block;
+    color:white;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-style: none;
+}
+
+.board {
+    text-align: center;
+    transition: .5s;
+    display:block;
+}
+
+.open{
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    font-size: 75%;
+    background-color: rgb(2, 27, 27);
+    color:white;
+}
+
+.cell{
+    width: 40px;
+    height: 40px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    font-size: 75%;
+    background-color: rgb(33, 131, 131);
+}
+
+
+
+
+
