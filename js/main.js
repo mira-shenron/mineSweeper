@@ -88,16 +88,16 @@ function buildBoard(iFirst, jFirst) {
     for (var i = 0; i < gLevel.SIZE; i++) {
         board[i] = [];
         for (var j = 0; j < gLevel.SIZE; j++) {
-            var isMark = false;
-            if(gBoard !== undefined){
-                isMark = gBoard[i][j].isMark;
-            }
+            //var isMark = false;
+            // if(gBoard !== undefined){
+            //     isMark = gBoard[i][j].isMark;
+            // }
             board[i][j] = {
                 i, j,
                 minesAroundCount: 0,
                 isShown: false,
                 isMine: false,
-                isMarked: isMark,
+                isMarked: false,
                 elemToPrint: ''
             };
         }
