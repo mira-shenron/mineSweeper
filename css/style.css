@@ -84,10 +84,6 @@ table {
     cursor: pointer;
 }
 
-.bomb{
-    background-color: rgb(166, 18, 172);
-}
-
 .lives{
     size: 35px;
     display: block;

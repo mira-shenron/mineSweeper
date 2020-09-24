@@ -347,11 +347,11 @@ function renderCell(location, value, isShown) {
 function showBombInDiffColorAndClose(loc){
     var cellSelector = '.' + getClassName(loc)
     var elCell = document.querySelector(cellSelector);
-    elCell.classList.add('bomb');
+    elCell.innerText = '💥';
 
     setTimeout(function(){
-        elCell.classList.remove('bomb');
-    }, 3000)
+        elCell.innerText = '';
+    }, 2000)
 }
 
 function handleFirstLeftClick(i, j) {
