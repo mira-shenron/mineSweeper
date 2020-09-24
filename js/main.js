@@ -11,14 +11,21 @@ var gLives;
 var gHints;
 var gIsHintUsed = false;
 
-localStorage.setItem('beginner', '0:0');
-localStorage.setItem('medium', '0:0');
-localStorage.setItem('expert', '0:0');
 
 
+initLocalStorage();
+function initLocalStorage(){
+if (localStorage.getItem('beginner') !== '0:0' || localStorage.getItem('medium') !== '0:0' || localStorage.getItem('expert') !== '0:0') {
+    //do nothing, storage already exists
+} else {
+    localStorage.setItem('beginner', '0:0');
+    localStorage.setItem('medium', '0:0');
+    localStorage.setItem('expert', '0:0');
+}
+}
 
 function initGame(elBtn, levelName) {
-    
+
     gGame = resetGame();
     gLives = 3;
     renderLives(gLives);
@@ -90,7 +97,7 @@ function printGameTime() {
 function resetGame() {
     var elBody = document.querySelector('body');
     elBody.pointerEvents = 'auto';
-    
+
     resetGameTime();
     clearInterval(gInterval);
     gFirstClick = true;
@@ -357,7 +364,7 @@ function openNegs(cell) {
 }
 
 
-function compareTimes(time,score){
+function compareTimes(time, score) {
     var timeMinSec = time.split(':');
     var timeMin = +timeMinSec[0];
     var timeSec = +timeMinSec[1];
@@ -365,21 +372,21 @@ function compareTimes(time,score){
     var scoreMin = +scoreMinSec[0];
     var scoreSec = +scoreMinSec[1];
 
-    if(timeMin < scoreMin){
+    if (timeMin < scoreMin) {
         return true;
-    }else if (timeMin === scoreMin){
-        if(timeSec < scoreSec){
+    } else if (timeMin === scoreMin) {
+        if (timeSec < scoreSec) {
             return true;
         }
     }
 }
 
-function handleBestScore(){
+function handleBestScore() {
     var elTime = document.querySelector('.timer span');
     var time = elTime.innerText;
     var score = localStorage.getItem(gLevel.name);
-    compareTimes(time,score);
-    if (compareTimes(time,score) || score === '0:0') {
+    compareTimes(time, score);
+    if (compareTimes(time, score) || score === '0:0') {
         localStorage.setItem(gLevel.name, time);
         renderBestScore(gLevel.name);
     }

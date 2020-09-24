@@ -122,7 +122,18 @@ table {
     font-weight: bold;
 }
 
-
+.safeclick{
+    width:5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    background-color: rgb(216, 140, 0);
+    font-weight: bold;
+    color:white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+}
 
 
 
