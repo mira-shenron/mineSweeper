@@ -403,7 +403,9 @@ function gameOver(isLost) {
     renderLives(0);
     clearInterval(gInterval);
     gGame.isOn = false;
-    handleBestScore();
+    if(!isLost){
+        handleBestScore();
+    }
 
     if (isLost) {
         renderSmiley('🤯');
