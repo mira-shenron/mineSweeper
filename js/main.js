@@ -204,15 +204,43 @@ function getElemToPrint(cell) {
 
 function handleOpenCell(cell) {
     var isLost = false;
+
+    var loc = { i: cell.i, j: cell.j };
+    cell.isShown = true;
+    renderCell(loc, cell.elemToPrint, cell.isShown);
+    
     if (cell.isMine) {
         var isLost = true;
         gameOver(isLost);
         revealAllMines();
+    }else{
+        if(checkVictory()){
+            gameOver(isLost);
+        }
     }
 
     //if empty cell open its neighbors
     if (cell.minesAroundCount === 0) {
         openNegs(cell);
+    }
+}
+
+function checkVictory(){
+    //if num of open cells === CellsToOpen and num of marked === numOfBombs then victory
+    var openCells = 0;
+    var markedCells = 0;
+    for(var i=0; i < gLevel.SIZE; i++){
+        for(var j=0; j < gLevel.SIZE; j++){
+            if(gBoard[i][j].isShown){
+                openCells++;
+            }else if(gBoard[i][j].isMarked){
+                markedCells++;
+            }
+        }
+    }
+
+    if(openCells === (gLevel.SIZE*gLevel.SIZE - gNumOfMines) && markedCells === gNumOfMines){
+        return true;
     }
 }
 
@@ -280,21 +308,9 @@ function cellClicked(elCell, i, j, ev) {
     }
 
     if (ev.which === LEFT_CLICK) {
-        if (gFirstClick) {
-            handleFirstLeftClick(i, j);
-        }
-
+        if (gFirstClick) handleFirstLeftClick(i, j); 
         if (gBoard[i][j].isShown) return;
-
-        if (!gBoard[i][j].isMarked) {
-
-            gBoard[i][j].isShown = true;
-            
-            var loc = { i: i, j: j };
-            renderCell(loc, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
-
-            handleOpenCell(gBoard[i][j]);
-        }
+        if (!gBoard[i][j].isMarked) handleOpenCell(gBoard[i][j]);
     }
 
     if (ev.which === RIGHT_CLICK) {
@@ -304,6 +320,11 @@ function cellClicked(elCell, i, j, ev) {
             gBoard[i][j].isMarked = true;
             gBoard[i][j].elemToPrint = '⛳';
             gLevel.MINES--;
+            
+            if(checkVictory()){
+                var isLost = false; 
+                gameOver(isLost);
+            }
         } else {
             gBoard[i][j].isMarked = false;
             gBoard[i][j].elemToPrint = '';
