@@ -33,6 +33,7 @@ h1{
     margin-top: 20px;
     text-align: center;
     cursor: pointer;
+    font-size: 30px;
 }
 
 .mines{
@@ -54,6 +55,8 @@ h1{
     color:white;
     text-align: center;
     padding-bottom: 10px;
+    font-weight: bold;
+    font-size: 25px;
 }
 
 table {
@@ -90,6 +93,33 @@ table {
     color: white;
     text-align: center;
     margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.hints{
+    size: 35px;
+    display: block;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.revealed{
+    background-color: rgb(133, 133, 190);
+}
+
+.score{
+    size: 35px;
+    display: block;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 

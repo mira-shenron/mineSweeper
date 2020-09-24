@@ -16,12 +16,18 @@
         <button class="button expert" name="expert" onclick="initGame(this)">Expert</button>
     </div>
 
-    <div class="smiley" onclick="restartLevel()">:
+    <div class="smiley" onclick="restartLevel()">
         <span></span>
     </div>
 
     <div class="lives">Lives:
         <span></span>
+    </div>
+
+    <div class="hints">Hints:
+        <span class="firstHint" onclick="useHint(this)"></span>
+        <span class="secondHint" onclick="useHint(this)"></span>
+        <span class="thirdHint" onclick="useHint(this)"></span>
     </div>
 
     <div class="mines">Mines:
@@ -34,6 +40,10 @@
     </table>
 
     <div class="timer">Your time:
+        <span></span>
+    </div>
+
+    <div class="score">Best Score:
         <span></span>
     </div>
 
