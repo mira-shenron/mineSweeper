@@ -147,11 +147,11 @@ function buildBoard(iFirst, jFirst) {
     return board;
 }
 
-function setMinesNegsCount(board) {
+function setMinesNegsCount() {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
-            var cell = board[i][j];
-            var numOfMines = countMinesNegs(cell, board);
+            var cell = gBoard[i][j];
+            var numOfMines = countMinesNegs(cell);
             cell.minesAroundCount = numOfMines;
             if (!cell.isMine && !cell.isMarked && numOfMines > 0) {
                 cell.elemToPrint = numOfMines;
@@ -160,7 +160,7 @@ function setMinesNegsCount(board) {
     }
 }
 
-function countMinesNegs(cell, board) {
+function countMinesNegs(cell) {
     var count = 0;
 
     for (var i = cell.i - 1; i <= cell.i + 1; i++) {
@@ -175,7 +175,7 @@ function countMinesNegs(cell, board) {
                 continue;
             }
 
-            if (board[i][j].isMine) {
+            if (gBoard[i][j].isMine) {
                 count++;
             };
         }
@@ -183,19 +183,18 @@ function countMinesNegs(cell, board) {
     return count;
 }
 
-function setMines(board, iFirst, jFirst) {
+function setMines(iFirst, jFirst) {
     var minesCounter = 0;
     while (minesCounter < gNumOfMines) {
         var i = getRandonInt(0, gLevel.SIZE - 1);
         var j = getRandonInt(0, gLevel.SIZE - 1);
 
-        if (!board[i][j].isMine && i !== iFirst && j !== jFirst) {
-            board[i][j].isMine = true;
+        if (!gBoard[i][j].isMine && i !== iFirst && j !== jFirst) {
+            gBoard[i][j].isMine = true;
             minesCounter++;
-            if (!board[i][j].isMarked) board[i][j].elemToPrint = '💣';
+            if (!gBoard[i][j].isMarked) gBoard[i][j].elemToPrint = '💣';
         }
     }
-    return board;
 }
 
 
@@ -493,6 +492,14 @@ function handleFirstLeftClick(i, j) {
     gFirstClick = false;
     setMines(gBoard, i, j);
     setMinesNegsCount(gBoard);
+    startStopwatch();
+}
+
+
+function handleFirstLeftClick(i, j) {
+    gFirstClick = false;
+    setMines(i, j);
+    setMinesNegsCount();
     startStopwatch();
 }
 
