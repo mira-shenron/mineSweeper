@@ -25,9 +25,10 @@ function initLocalStorage() {
     }
 }
 
+
 function initGame(elBtn, levelName) {
     gSafeClickCounter = 3;
-
+    renderSafeClick();
     gGame = resetGame();
     gLives = 3;
     renderLives(gLives);
@@ -52,6 +53,12 @@ function initGame(elBtn, levelName) {
     renderSmiley('😃');
     renderMines(gLevel.MINES);
     renderBoard(gBoard);
+}
+
+
+function renderSafeClick(){
+    var elCounter = document.querySelector('.num');
+    elCounter.innerText = gSafeClickCounter;
 }
 
 function renderHints(hintsNum) {
@@ -510,8 +517,7 @@ function safeClick() {
 
     markRandomCell();
     gSafeClickCounter--;
-    var elCounter = document.querySelector('.num');
-    elCounter.innerText = gSafeClickCounter;
+    renderSafeClick();
 }
 
 function markRandomCell() {
