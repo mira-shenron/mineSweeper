@@ -435,12 +435,18 @@ function revealAllMines() {
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
             if (gBoard[i][j].isMine) {
-                gBoard[i][j].isShown = true;
-                gBoard[i][j].elemToPrint = '💣';
-                gBoard[i][j].isMarked = false;
-
-                renderCell({ i: i, j: j }, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
+                if(gBoard[i][j].isMarked){
+                    gBoard[i][j].elemToPrint = '⛳';
+                }else{
+                    gBoard[i][j].elemToPrint = '💣';
+                }
+            }else{
+                if(gBoard[i][j].isMarked){
+                    gBoard[i][j].elemToPrint = '❌';
+                }
             }
+            gBoard[i][j].isShown = true;
+            renderCell({ i: i, j: j }, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
         }
     }
 }
