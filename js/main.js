@@ -235,6 +235,7 @@ function renderBoard(board) {
         strHTML += '</tr>\n';
     }
     elBoard.innerHTML = strHTML;
+    //console.log(elBoard.innerHTML);
 }
 
 function handleOpenCell(cell) {
@@ -464,18 +465,18 @@ function cellClicked(i, j, ev) {
 
         if (!gBoard[i][j].isMarked) {
             gBoard[i][j].isMarked = true;
-            gBoard[i][j].elemToPrint = '⛳';
+            var elToPrint = '⛳';
             gLevel.MINES--;
 
             checkVictory();
 
         } else {
             gBoard[i][j].isMarked = false;
-            gBoard[i][j].elemToPrint = '';
+            var elToPrint = '';
             gLevel.MINES++;
         }
 
-        renderCell({ i: i, j: j }, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
+        renderCell({ i: i, j: j }, elToPrint, gBoard[i][j].isShown);
         renderMines();
     }
 }
