@@ -10,21 +10,23 @@ var gNumOfMines;
 var gLives;
 var gHints;
 var gIsHintUsed = false;
+var gSafeClickCounter;
 
-
+// please note that safeclick doesn`t work yet, will continue tomorrow
 
 initLocalStorage();
-function initLocalStorage(){
-if (localStorage.getItem('beginner') !== '0:0' || localStorage.getItem('medium') !== '0:0' || localStorage.getItem('expert') !== '0:0') {
-    //do nothing, storage already exists
-} else {
-    localStorage.setItem('beginner', '0:0');
-    localStorage.setItem('medium', '0:0');
-    localStorage.setItem('expert', '0:0');
-}
+function initLocalStorage() {
+    if (localStorage.getItem('beginner') !== '0:0' || localStorage.getItem('medium') !== '0:0' || localStorage.getItem('expert') !== '0:0') {
+        //do nothing, storage already exists
+    } else {
+        localStorage.setItem('beginner', '0:0');
+        localStorage.setItem('medium', '0:0');
+        localStorage.setItem('expert', '0:0');
+    }
 }
 
 function initGame(elBtn, levelName) {
+    gSafeClickCounter = 3;
 
     gGame = resetGame();
     gLives = 3;
@@ -402,7 +404,7 @@ function gameOver(isLost) {
     renderLives(0);
     clearInterval(gInterval);
     gGame.isOn = false;
-    if(!isLost){
+    if (!isLost) {
         handleBestScore();
     }
 
@@ -503,3 +505,28 @@ function handleFirstLeftClick(i, j) {
     startStopwatch();
 }
 
+function safeClick() {
+    if (gSafeClickCounter <= 0) return;
+
+    markRandomCell();
+    gSafeClickCounter--;
+    var elCounter = document.querySelector('.num');
+    elCounter.innerText = gSafeClickCounter;
+}
+
+function markRandomCell() {
+    var isFound = false;
+    while (!isFound) {
+        var randI = getRandonInt(0, gLevel.SIZE - 1);
+        var randJ = getRandonInt(0, gLevel.SIZE - 1);
+        if (!gBoard[randI][randJ].isMine && !gBoard[randI][randJ].isShown) {
+            var cellSelector = '.' + getClassName({ i: randI, j: randJ });
+            var elCell = document.querySelector(cellSelector);
+            elCell.classList.add('safeclicked');
+            setTimeout(function () {
+                elCell.classList.remove('safeclicked');
+            }, 1000);
+            isFound = true;
+        }
+    }
+}
