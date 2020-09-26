@@ -1,11 +1,11 @@
 body{
-    background-image: url(../img/background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
+    font-family: 'main font';
+    background-image: url(../img/1111.png);
 }
 
 h1{
-    color:white;
     text-align: center;
 }
 
@@ -18,7 +18,7 @@ h1{
 .button{
     margin-top: 10px;
     padding: 10px;
-    background-color: rgb(216, 140, 0);
+    background-color: #c4729b;
     font-weight: bold;
     color:white;
     cursor: pointer;
@@ -26,11 +26,11 @@ h1{
 }
 
 .button:hover{
-    background-color: rgb(185, 126, 15);
+    background-color: #cf478b;
 }
 
 .smiley{
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
     cursor: pointer;
     font-size: 30px;
@@ -40,9 +40,7 @@ h1{
     padding: 25px;
     size: 35px;
     display: block;
-    color: white;
     text-align: center;
-    margin-top: 15px;
 }
 
 .mines span{
@@ -52,7 +50,6 @@ h1{
 
 .timer{
     display:block;
-    color:white;
     text-align: center;
     padding-bottom: 10px;
     font-weight: bold;
@@ -69,7 +66,7 @@ table {
     text-align: center;
     transition: .5s;
     display:block;
-    background-color: rgb(55, 173, 173);
+    background-color: #7e85bd;
 }
 
 .open{
@@ -77,7 +74,7 @@ table {
     height: 40px;
     font-weight: bold;
     font-size: 75%;
-    background-color: rgb(94, 228, 228);
+    background-color: #aeabd8;
     color:white;
 }
 
@@ -90,7 +87,6 @@ table {
 .lives{
     size: 35px;
     display: block;
-    color: white;
     text-align: center;
     margin-top: 15px;
     font-size: 20px;
@@ -100,7 +96,6 @@ table {
 .hints{
     size: 35px;
     display: block;
-    color: white;
     text-align: center;
     margin-top: 15px;
     cursor: pointer;
@@ -109,16 +104,15 @@ table {
 }
 
 .revealed{
-    background-color: rgb(133, 133, 190);
+    background-color: #eccb8e;
 }
 
 .safeclicked{
-    background-color: lightgreen;
+    background-color: #ece8de;
 }
 
 .numOfClicks{
     display: block;
-    color: white;
     text-align: center;
     font-size: 15px;
 }
@@ -126,25 +120,76 @@ table {
 .score{
     size: 35px;
     display: block;
-    color: white;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 5px;
     font-size: 20px;
     font-weight: bold;
 }
 
 .safeclick{
-    width:5%;
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
-    background-color: rgb(216, 140, 0);
+    background-color: #c4729b;
     font-weight: bold;
     color:white;
     cursor: pointer;
     border-radius: 5px;
     text-align: center;
+    margin-right: 20px;
 }
 
+.safeclick:hover{
+    background-color: #cf478b;
+}
 
+.undo{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    background-color: #c4729b;
+    font-weight: bold;
+    color:white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.undo:hover{
+    background-color: #ad4a7c;
+}
+
+.safeClickBtn{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+}
+
+.numOfClicks{
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.num{
+    margin-right: 5px;
+}
+
+.bonusBtns{
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+@font-face{
+    font-family: 'main font';
+    src:url(../font/Rubik-Regular.woff) format("woff");
+    font-style: normal;
+}
 

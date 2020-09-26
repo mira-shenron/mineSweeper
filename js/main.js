@@ -11,6 +11,8 @@ var gLives;
 var gHints;
 var gIsHintUsed = false;
 var gSafeClickCounter;
+var gBoardStack;
+var gMinesNumStack;
 
 // please note that safeclick doesn`t work yet, will continue tomorrow
 
@@ -27,6 +29,9 @@ function initLocalStorage() {
 
 
 function initGame(elBtn, levelName) {
+    gBoardStack = [];
+    gMinesNumStack = [];
+
     gSafeClickCounter = 3;
     renderSafeClick();
     gGame = resetGame();
@@ -56,7 +61,7 @@ function initGame(elBtn, levelName) {
 }
 
 
-function renderSafeClick(){
+function renderSafeClick() {
     var elCounter = document.querySelector('.num');
     elCounter.innerText = gSafeClickCounter;
 }
@@ -81,9 +86,9 @@ function restartLevel() {
     initGame(undefined, gLevel.name);
 }
 
-function renderMines() {
+function renderMines(minesNum) {
     var elMinesNum = document.querySelector('.mines span');
-    elMinesNum.innerText = gLevel.MINES;
+    elMinesNum.innerText = minesNum;
 }
 
 function resetGameTime() {
@@ -147,8 +152,7 @@ function buildBoard(iFirst, jFirst) {
                 minesAroundCount: 0,
                 isShown: false,
                 isMine: false,
-                isMarked: false,
-                elemToPrint: ''
+                isMarked: false
             };
         }
     }
@@ -227,15 +231,12 @@ function renderBoard(board) {
             }
 
             strHTML += `\t<td class="cell ${cellClass} ${isOpenClass}"  onmousedown="cellClicked(${i}, ${j}, event)">\n`;
-            if (currCell.isShown || currCell.isMarked) {
-                strHTML += currCell.elemToPrint;
-            }
+            strHTML += getValueFromCell(currCell);
             strHTML += '\t</td>\n';
         }
         strHTML += '</tr>\n';
     }
     elBoard.innerHTML = strHTML;
-    //console.log(elBoard.innerHTML);
 }
 
 function handleOpenCell(cell) {
@@ -251,7 +252,7 @@ function handleOpenCell(cell) {
     if (cell.isMine) {
         if (gLives === 1) {
             cell.isShown = true;
-            renderCell({ i: cell.i, j: cell.j }, cell.elemToPrint, cell.isShown);
+            renderCell({ i: cell.i, j: cell.j }, cell);
 
             var isLost = true;
             gameOver(isLost);
@@ -263,8 +264,12 @@ function handleOpenCell(cell) {
             return;
         }
     } else {
+        var newGboard = copyMat(gBoard);
+        gBoardStack.push(newGboard);
+        gMinesNumStack.push(gLevel.MINES);
+
         cell.isShown = true;
-        renderCell({ i: cell.i, j: cell.j }, cell.elemToPrint, cell.isShown);
+        renderCell({ i: cell.i, j: cell.j }, cell);
         checkVictory();
         //if empty cell open its neighbors
         if (cell.minesAroundCount === 0) {
@@ -273,6 +278,30 @@ function handleOpenCell(cell) {
     }
 }
 
+function copyMat(mat) {
+    var newMat = [];
+
+    for (var i = 0; i < mat.length; i++) {
+        newMat[i] = [];
+        for (var j = 0; j < mat[0].length; j++) {
+            newMat[i][j] = copyCell(mat[i][j]);
+        }
+    }
+    return newMat;
+}
+
+function copyCell(cell) {
+    var newCell = {
+        i: cell.i,
+        j: cell.j,
+        minesAroundCount: cell.minesAroundCount,
+        isShown: cell.isShown,
+        isMine: cell.isMine,
+        isMarked: cell.isMarked
+    };
+
+    return newCell;
+}
 
 function revealCellAndNegsForSecond(cell) {
     var negs = [];
@@ -296,14 +325,8 @@ function revealCellAndNegsForSecond(cell) {
         var elCell = document.querySelector(cellSelector);
 
         elCell.classList.add('revealed');
-        var elToPrint = neg.elemToPrint;
-        if (neg.isMarked) {
-            if (neg.isMine) {
-                elToPrint = '💣';
-            } else {
-                elToPrint = (neg.minesAroundCount === 0) ? '' : neg.minesAroundCount;
-            }
-        }
+        neg.isShown = true;
+        var elToPrint = getValueFromCell(neg);
         elCell.innerText = elToPrint;
     }
 
@@ -314,8 +337,9 @@ function revealCellAndNegsForSecond(cell) {
             var elCell = document.querySelector(cellSelector);
 
             elCell.classList.remove('revealed');
-            elToPrint = (neg.isMarked) ? '⛳' : '';
-            elCell.innerText = elToPrint;
+            elCell.classList.remove('open');
+            neg.isShown = false;
+            elCell.innerText = getValueFromCell(neg);
         }
     }, 1000);
 }
@@ -365,7 +389,7 @@ function openNegs(cell) {
             if (!gBoard[i][j].isMarked) {
                 gBoard[i][j].isShown = true;
 
-                renderCell({ i: i, j: j }, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
+                renderCell({ i: i, j: j }, gBoard[i][j]);
                 checkVictory();
             }
         }
@@ -432,23 +456,38 @@ function renderSmiley(smiley) {
 }
 
 function revealAllMines() {
+    var value;
     for (var i = 0; i < gLevel.SIZE; i++) {
         for (var j = 0; j < gLevel.SIZE; j++) {
+
+            if (gBoard[i][j].minesAroundCount === 0) {
+                value = '';
+            } else {
+                value = gBoard[i][j].minesAroundCount;
+            }
+
             if (gBoard[i][j].isMine) {
-                if(gBoard[i][j].isMarked){
-                    gBoard[i][j].elemToPrint = '⛳';
-                }else{
-                    gBoard[i][j].elemToPrint = '💣';
+                if (gBoard[i][j].isMarked) {
+                    value = '⛳';
+                } else {
+                    value = '💣';
                 }
-            }else{
-                if(gBoard[i][j].isMarked){
-                    gBoard[i][j].elemToPrint = '❌';
+            } else {
+                if (gBoard[i][j].isMarked) {
+                    value = '❌';
                 }
             }
             gBoard[i][j].isShown = true;
-            renderCell({ i: i, j: j }, gBoard[i][j].elemToPrint, gBoard[i][j].isShown);
+            renderEndOfGame({ i: i, j: j }, value);
         }
     }
+}
+
+function renderEndOfGame(loc, value) {
+    var cellSelector = '.' + getClassName(loc)
+    var elCell = document.querySelector(cellSelector);
+    elCell.classList.add('open');
+    elCell.innerHTML = value;
 }
 
 
@@ -469,29 +508,69 @@ function cellClicked(i, j, ev) {
     if (ev.which === RIGHT_CLICK) {
         if (gBoard[i][j].isShown) return;
 
+        var newGboard = copyMat(gBoard);
+        gBoardStack.push(newGboard);
+        gMinesNumStack.push(gLevel.MINES);
+
         if (!gBoard[i][j].isMarked) {
             gBoard[i][j].isMarked = true;
-            var elToPrint = '⛳';
             gLevel.MINES--;
 
             checkVictory();
 
         } else {
             gBoard[i][j].isMarked = false;
-            var elToPrint = '';
             gLevel.MINES++;
         }
 
-        renderCell({ i: i, j: j }, elToPrint, gBoard[i][j].isShown);
-        renderMines();
+        renderCell({ i: i, j: j }, gBoard[i][j]);
+        renderMines(gLevel.MINES);
     }
 }
 
-function renderCell(location, value, isShown) {
+function undo() {
+    if (!gGame.isOn) return;
+
+    var board = gBoardStack.pop();
+    if(board === undefined) return;
+
+    gBoard = copyMat(board);
+
+    var minesNum = gMinesNumStack.pop();
+    gLevel.MINES = minesNum;
+
+    renderMines(minesNum);
+    renderBoard(gBoard);
+}
+
+function renderCell(location, cell) {
+    var value = getValueFromCell(cell);
     var cellSelector = '.' + getClassName(location)
     var elCell = document.querySelector(cellSelector);
-    if (isShown) elCell.classList.add('open');
+    if (cell.isShown) elCell.classList.add('open');
     elCell.innerHTML = value;
+}
+
+function getValueFromCell(cell) {
+    var value;
+    if (!cell.isShown && !cell.isMarked) {
+        value = '';
+    }
+    if (!cell.isShown && cell.isMarked) {
+        value = '⛳';
+    }
+    if (cell.isShown && cell.isMine) {
+        value = '💣';
+    }
+    if (cell.isShown && !cell.isMine) {
+        if (cell.minesAroundCount === 0) {
+            value = '';
+        } else {
+            value = cell.minesAroundCount;
+        }
+    }
+
+    return value;
 }
 
 function showBombInDiffColorAndClose(loc) {
@@ -520,6 +599,7 @@ function handleFirstLeftClick(i, j) {
 }
 
 function safeClick() {
+    if (!gGame.isOn) return;
     if (gSafeClickCounter <= 0) return;
 
     markRandomCell();
