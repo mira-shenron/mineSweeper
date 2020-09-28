@@ -14,7 +14,6 @@ var gSafeClickCounter;
 var gBoardStack;
 var gMinesNumStack;
 
-// please note that safeclick doesn`t work yet, will continue tomorrow
 
 initLocalStorage();
 function initLocalStorage() {
@@ -268,13 +267,7 @@ function handleOpenCell(cell) {
         gBoardStack.push(newGboard);
         gMinesNumStack.push(gLevel.MINES);
 
-        cell.isShown = true;
-        renderCell({ i: cell.i, j: cell.j }, cell);
-        checkVictory();
-        //if empty cell open its neighbors
-        if (cell.minesAroundCount === 0) {
-            openNegs(cell);
-        }
+        openNegs(cell.i, cell.j);
     }
 }
 
@@ -373,27 +366,32 @@ function checkVictory() {
     }
 }
 
-function openNegs(cell) {
-    for (var i = cell.i - 1; i <= cell.i + 1; i++) {
-        if (i < 0 || i >= gLevel.SIZE) {
-            continue;
-        }
-        for (var j = cell.j - 1; j <= cell.j + 1; j++) {
-            if (j < 0 || j >= gLevel.SIZE) {
-                continue;
-            }
-            if (i === cell.i && j === cell.j) {
-                continue;
-            }
-
-            if (!gBoard[i][j].isMarked) {
-                gBoard[i][j].isShown = true;
-
-                renderCell({ i: i, j: j }, gBoard[i][j]);
-                checkVictory();
-            }
-        }
+function openNegs(i, j) {
+    if (i >= gLevel.SIZE || j >= gLevel.SIZE || i < 0 || j < 0) {
+        return;
     }
+
+    if (gBoard[i][j].isMarked || gBoard[i][j].isShown) {
+        return;
+    }
+
+    gBoard[i][j].isShown = true;
+    renderCell({ i: i, j: j }, gBoard[i][j]);
+    checkVictory();
+
+    if (gBoard[i][j].minesAroundCount !== 0) {
+        return;
+    }
+
+    openNegs(i - 1, j);
+    openNegs(i, j - 1);
+    openNegs(i, j + 1);
+    openNegs(i + 1, j);
+
+    openNegs(i + 1, j + 1);
+    openNegs(i - 1, j - 1);
+    openNegs(i - 1, j + 1);
+    openNegs(i + 1, j - 1);
 }
 
 
@@ -532,7 +530,7 @@ function undo() {
     if (!gGame.isOn) return;
 
     var board = gBoardStack.pop();
-    if(board === undefined) return;
+    if (board === undefined) return;
 
     gBoard = copyMat(board);
 
@@ -582,14 +580,6 @@ function showBombInDiffColorAndClose(loc) {
         elCell.innerText = '';
     }, 100)
 }
-
-function handleFirstLeftClick(i, j) {
-    gFirstClick = false;
-    setMines(gBoard, i, j);
-    setMinesNegsCount(gBoard);
-    startStopwatch();
-}
-
 
 function handleFirstLeftClick(i, j) {
     gFirstClick = false;
