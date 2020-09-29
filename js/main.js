@@ -15,7 +15,6 @@ var gBoardStack;
 var gMinesNumStack;
 
 
-initLocalStorage();
 function initLocalStorage() {
     if (localStorage.getItem('beginner') !== '0:0' || localStorage.getItem('medium') !== '0:0' || localStorage.getItem('expert') !== '0:0') {
         //do nothing, storage already exists
@@ -28,17 +27,13 @@ function initLocalStorage() {
 
 
 function initGame(elBtn, levelName) {
-    gBoardStack = [];
-    gMinesNumStack = [];
 
-    gSafeClickCounter = 3;
-    renderSafeClick();
+    initLocalStorage();
     gGame = resetGame();
-    gLives = 3;
+    
     renderLives(gLives);
-
-    gHints = 3;
-    renderHints(gHints);
+    renderHints();
+    renderSafeClick();
 
     var level = 'beginner';
     if (elBtn !== undefined) {
@@ -50,9 +45,9 @@ function initGame(elBtn, levelName) {
 
     gLevel = initLevel(level);
     renderBestScore(gLevel.name);
+
     gNumOfMines = gLevel.MINES;
     gBoard = buildBoard();
-
 
     renderSmiley('😃');
     renderMines(gLevel.MINES);
@@ -65,10 +60,10 @@ function renderSafeClick() {
     elCounter.innerText = gSafeClickCounter;
 }
 
-function renderHints(hintsNum) {
-    var elHint1 = document.querySelector('.firstHint');
-    var elHint2 = document.querySelector('.secondHint');
-    var elHint3 = document.querySelector('.thirdHint');
+function renderHints() {
+    var elHint1 = document.querySelector('.first-hint');
+    var elHint2 = document.querySelector('.second-hint');
+    var elHint3 = document.querySelector('.third-hint');
 
     elHint1.innerText = '💡';
     elHint2.innerText = '💡';
@@ -111,6 +106,12 @@ function resetGame() {
     var elBody = document.querySelector('body');
     elBody.pointerEvents = 'auto';
 
+    gBoardStack = [];
+    gMinesNumStack = [];
+    gSafeClickCounter = 3;
+    gLives = 3;
+    gHints = 3;
+
     resetGameTime();
     clearInterval(gInterval);
     gFirstClick = true;
@@ -140,7 +141,7 @@ function initLevel(levelName) {
     return level;
 }
 
-function buildBoard(iFirst, jFirst) {
+function buildBoard() {
     var board = [];
 
     for (var i = 0; i < gLevel.SIZE; i++) {
@@ -165,9 +166,6 @@ function setMinesNegsCount() {
             var cell = gBoard[i][j];
             var numOfMines = countMinesNegs(cell);
             cell.minesAroundCount = numOfMines;
-            if (!cell.isMine && !cell.isMarked && numOfMines > 0) {
-                cell.elemToPrint = numOfMines;
-            }
         }
     }
 }
@@ -176,20 +174,15 @@ function countMinesNegs(cell) {
     var count = 0;
 
     for (var i = cell.i - 1; i <= cell.i + 1; i++) {
-        if (i < 0 || i >= gLevel.SIZE) {
-            continue;
-        }
+        if (i < 0 || i >= gLevel.SIZE) continue;
+            
         for (var j = cell.j - 1; j <= cell.j + 1; j++) {
-            if (j < 0 || j >= gLevel.SIZE) {
-                continue;
-            }
-            if (i === cell.i && j === cell.j) {
-                continue;
-            }
+            if (j < 0 || j >= gLevel.SIZE)  continue;
+            if (i === cell.i && j === cell.j) continue; 
 
             if (gBoard[i][j].isMine) {
                 count++;
-            };
+            }
         }
     }
     return count;
@@ -204,7 +197,6 @@ function setMines(iFirst, jFirst) {
         if (!gBoard[i][j].isMine && i !== iFirst && j !== jFirst) {
             gBoard[i][j].isMine = true;
             minesCounter++;
-            if (!gBoard[i][j].isMarked) gBoard[i][j].elemToPrint = '💣';
         }
     }
 }
